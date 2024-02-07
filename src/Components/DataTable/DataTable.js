@@ -87,8 +87,16 @@ const DataTable = ({ data = [], status, currentPage = 1 }) => {
           </Table>
         </TableContainer>
       ) : (
-        <div className="text-center mt-20 bold">
-          <i class="fa fa-triangle-exclamation fa-2x" aria-hidden="true"></i>
+        <div className="text-center mt-20 bold gap-10 center">
+          {status == "succeeded" && (
+            <>
+              <i
+                class="fa fa-exclamation-triangle fa-2x"
+                aria-hidden="true"
+              ></i>
+              No results found
+            </>
+          )}
         </div>
       )}
       {status === "loading" && (

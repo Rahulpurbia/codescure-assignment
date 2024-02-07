@@ -1,6 +1,7 @@
 // src/App.js
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import {
   selectPeople,
   selectPeopleStatus,
@@ -27,7 +28,7 @@ const Homepage = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchValue]);
+  }, [debouncedSearchValue]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,19 +60,37 @@ const Homepage = () => {
     currentPage < pageCount && setCurrentPage((prevPage) => prevPage + 1);
   };
 
+  const cancelTokenSource = axios.CancelToken.source();
+
   const fetchPeople = async (page, searchQuery = "") => {
+    cancelTokenSource.cancel("Operation canceled by the user.");
+    const newCancelTokenSource = axios.CancelToken.source();
+
     try {
       const apiUrl = `https://swapi.dev/api/people/?page=${page}&search=${searchQuery}`;
 
-      const response = await fetch(apiUrl);
-      const data = await response.json();
+      const response = await axios.get(apiUrl, {
+        cancelToken: newCancelTokenSource.token,
+      });
+
+      const data = response.data;
       const pages = Math.ceil(data.count / 10);
       setPageCount(pages);
 
       return data.results;
     } catch (error) {
-      throw error;
+      if (axios.isCancel(error)) {
+        // Request was canceled
+        console.log("Request canceled:", error.message);
+      } else {
+        // Actual error
+        throw error;
+      }
     }
+  };
+
+  const cancelPreviousRequest = () => {
+    cancelTokenSource.cancel("Operation canceled by the user.");
   };
 
   return (
