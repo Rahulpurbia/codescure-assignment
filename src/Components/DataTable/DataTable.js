@@ -1,4 +1,5 @@
 import * as React from "react";
+import "./DataTable.css";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,11 +13,15 @@ const DataTable = ({ data = [], status, currentPage = 1 }) => {
     <>
       {data.length > 0 ? (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table
+            sx={{ minWidth: 650 }}
+            aria-label="simple table"
+            className="my-table"
+          >
             <TableHead>
               <TableRow>
                 <TableCell className="bold">Sl.No.</TableCell>
-                <TableCell className="bold">Name</TableCell>
+                <TableCell className={`bold`}>Name</TableCell>
                 <TableCell align="center" className="bold">
                   Birth Year
                 </TableCell>
@@ -61,12 +66,10 @@ const DataTable = ({ data = [], status, currentPage = 1 }) => {
                       key={value.created}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell component="th" scope="row">
+                      <TableCell>
                         {(currentPage - 1) * 10 + index + 1}
                       </TableCell>
-                      <TableCell component="th" scope="row">
-                        {value.name}
-                      </TableCell>
+                      <TableCell>{value.name}</TableCell>
                       <TableCell>{value.birth_year}</TableCell>
                       <TableCell className="no-wrap">
                         <i className={`fa fa-${icon} fa-2x`}></i>
