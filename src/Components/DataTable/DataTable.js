@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-const DataTable = ({ data = [], status }) => {
+const DataTable = ({ data = [], status, currentPage = 1 }) => {
   return (
     <>
       {data.length > 0 ? (
@@ -15,6 +15,7 @@ const DataTable = ({ data = [], status }) => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
+                <TableCell className="bold">Sl.No.</TableCell>
                 <TableCell className="bold">Name</TableCell>
                 <TableCell align="center" className="bold">
                   Birth Year
@@ -50,48 +51,37 @@ const DataTable = ({ data = [], status }) => {
             </TableHead>
             {status === "succeeded" && (
               <TableBody>
-                {data.map((value) => (
-                  <TableRow
-                    key={value.created}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {value.name}
-                    </TableCell>
-                    <TableCell align="right">{value.birth_year}</TableCell>
-                    {value.species.map((specie, index) => {
-                      let type = specie[specie.length - 2];
-                      return (
-                        <TableCell
-                          key={index}
-                          align="right"
-                          className="no-wrap"
-                        >
-                          {type == 1 ? (
-                            <i className="fa fa-user"></i>
-                          ) : type == 2 ? (
-                            <i className="fa fa-android"></i>
-                          ) : (
-                            <i className="fa fa-question"></i>
-                          )}
-                          &nbsp;
-                          {specie}
-                        </TableCell>
-                      );
-                    })}
-                    {value?.species?.length === 0 && (
-                      <TableCell>No species</TableCell>
-                    )}
-                    <TableCell>{value.edited}</TableCell>
-                    <TableCell>{value.eye_color}</TableCell>
-                    <TableCell>{value.gender}</TableCell>
-                    <TableCell>{value.hair_color}</TableCell>
-                    <TableCell>{value.height}</TableCell>
-                    <TableCell>{value.homeworld}</TableCell>
-                    <TableCell>{value.mass}</TableCell>
-                    <TableCell>{value.skin_color}</TableCell>
-                  </TableRow>
-                ))}
+                {data.map((value, index) => {
+                  let specie = value.species[0] || "";
+                  let type = specie[specie?.length - 2];
+                  let icon =
+                    type == 1 ? "user" : type == 2 ? "android" : "question";
+                  return (
+                    <TableRow
+                      key={value.created}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {(currentPage - 1) * 10 + index + 1}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {value.name}
+                      </TableCell>
+                      <TableCell>{value.birth_year}</TableCell>
+                      <TableCell className="no-wrap">
+                        <i className={`fa fa-${icon} fa-2x`}></i>
+                      </TableCell>
+                      <TableCell>{value.edited}</TableCell>
+                      <TableCell>{value.eye_color}</TableCell>
+                      <TableCell>{value.gender}</TableCell>
+                      <TableCell>{value.hair_color}</TableCell>
+                      <TableCell>{value.height}</TableCell>
+                      <TableCell>{value.homeworld}</TableCell>
+                      <TableCell>{value.mass}</TableCell>
+                      <TableCell>{value.skin_color}</TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             )}
           </Table>

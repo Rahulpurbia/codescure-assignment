@@ -91,7 +91,7 @@ const Homepage = () => {
             type="text"
             className="w-100 search-bar mb-20"
           />
-          <DataTable data={people} status={status} />
+          <DataTable data={people} status={status} currentPage={currentPage} />
         </div>
       )}
       {status === "succeeded" && (
